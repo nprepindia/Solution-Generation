@@ -68,9 +68,15 @@ export class SolutionGenerationController {
         references: solutionOutput.references.map(ref => ({
           book: ref.book_title,
           chapter: ref.book_id.toString(), // Convert book_id to string for chapter field
-          page_number: ref.page_start,
-          paragraph_number: 1, // Default value since this isn't provided by the vector search
+          page_start: ref.page_start,
+          page_end: ref.page_end,
         })),
+        video_references: solutionOutput.video_references.map(ref => ({
+          video_id: ref.video_id,
+          time_start: ref.time_start,
+          time_end: ref.time_end,
+        })) || [],
+        images: solutionOutput.images,
         subject_id: classificationResult.subject_id,
         topic_id: classificationResult.topic_id,
         category_id: classificationResult.category_id,

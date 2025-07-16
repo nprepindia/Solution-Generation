@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsArray, ValidateNested, IsOptional, IsIn } from 'class-validator';
+import { IsNumber, IsString, IsArray, ValidateNested, IsOptional, IsIn, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class ReferenceDto {
@@ -9,10 +9,29 @@ class ReferenceDto {
   chapter: string;
 
   @IsNumber()
-  page_number: number;
+  page_start: number;
 
   @IsNumber()
-  paragraph_number: number;
+  page_end: number;
+}
+
+class VideoReferenceDto {
+  @IsString()
+  video_id: string;
+
+  @IsString()
+  time_start: string;
+
+  @IsString()
+  time_end: string;
+}
+
+class ImageDto {
+  @IsBoolean()
+  is_required: boolean;
+
+  @IsString()
+  image_description: string | null;
 }
 
 // 3.5 Final Response DTO.
@@ -37,8 +56,17 @@ export class Solution {
   references: {
     book: string;
     chapter: string;
-    page_number: number;
-    paragraph_number: number;
+    page_start: number;
+    page_end: number;
+  }[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => VideoReferenceDto)
+  video_references: {
+    video_id: string;
+    time_start: string;
+    time_end: string;
   }[];
 
   @IsNumber()
@@ -55,5 +83,12 @@ export class Solution {
   @IsIn(['easy', 'medium', 'hard'])
   difficulty: 'easy' | 'medium' | 'hard';
   
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ImageDto)
+  images: {
+    is_required: boolean;
+    image_description: string | null;
+  }[];
   // Note: 'images' field is not included in the final response per the n8n 'Respond to Webhook' node.
 } 
