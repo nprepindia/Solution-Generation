@@ -3,4 +3,4 @@
 git pull origin main
 pnpm install
 pnpm run build
-pm2 restart solution-generator
+pm2 reload solution-generator
